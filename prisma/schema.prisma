@@ -1,0 +1,72 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+
+model User {
+  id        String   @id @default(uuid())
+  name      String
+  email     String
+  Password  String
+  created_at DateTime? @default(now())
+  updated_at DateTime? @default(now())
+  children  Child[]
+  @@map("users")
+}
+
+model Child {
+  id             String   @id @default(uuid())
+  
+  // Informações Básicas
+  name           String
+  nickname       String?
+  age            Int?
+  gender         String?
+  photo          String?   // URL ou caminho da foto
+  hasAutism      String?   // "yes" ou "no"
+  autismLevel    String?   // "1", "2", "3"
+  
+  // Categoria Pessoal
+  aboutMe        String?
+  specialInterests String[] @default([])
+  routine        String?
+  communication  String?
+  
+  // Categoria Comportamento
+  likes          String[] @default([])
+  dislikes       String[] @default([])
+  skills         String[] @default([])
+  sensoryNeeds   String?
+  
+  // Categoria Ajuda
+  howToHelp         String?
+  whenFrustrated    String?
+  whenNeedsAttention String?
+  difficulties      String[] @default([])
+  
+  // Categoria Saúde
+  medicalInfo    String?
+  autismInfo     String?
+  medications    String[] @default([])
+  allergies      String[] @default([])
+  
+  // 🔗 Relação com User
+  parentId       String
+  parent         User     @relation(fields: [parentId], references: [id], onDelete: Cascade)
+
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+}
+
+
