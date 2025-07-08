@@ -11,7 +11,6 @@ const router = Router();
 // Controllers
 const childController = new ChildController();
 
-// Rotas de usuários
 router.post('/users', new CreateUserController().handle);
 router.post('/session', new AuthUserController().handle);
 router.get('/me', isAuthenticated, new DetailuserController().handle);
