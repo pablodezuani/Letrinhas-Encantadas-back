@@ -1,12 +1,12 @@
 {
-  "name": "backend",
+  "name": "Letrinhas-Encantadas-back",
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "ts-node-dev src/server.ts",
     "build": "tsc && npx prisma generate",
-    "vercel-build": "npx prisma migrate deploy && npm run build"
+    "vercel-build": "npx prisma migrate deploy"
   },
   "keywords": [],
   "author": "",
