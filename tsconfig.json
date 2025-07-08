@@ -7,7 +7,7 @@
     "strict": false,
     "skipLibCheck": true,
     "typeRoots": ["./src/@types"],
-    "rootDir": "src",
+    "rootDir": ".",
     "outDir": "dist"
   }
 }
