@@ -20,4 +20,4 @@ return res.status(500).json({
     message:'Internal server erro'
 })
 })
-app.listen(3333 , () => console.log('Servidor online!'))
+
