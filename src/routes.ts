@@ -4,7 +4,7 @@ import { CreateUserController } from './controllers/user/CreateUserController';
 import { AuthUserController } from './controllers/user/AuthUserController';
 import { isAuthenticated } from './middlewares/isAuthenticated';
 import { DetailuserController } from './controllers/user/DetailUserController';
-import { ChildController } from './controllers/user/child.controller';
+import { ChildController } from './controllers/child/child.controller';
 
 const router = Router();
 
@@ -17,5 +17,7 @@ router.get('/me', isAuthenticated, new DetailuserController().handle);
 
 // Rotas de crianças
 router.post('/children', isAuthenticated, childController.handleCreate);
+router.get('/children/with-parent', (req, res) => childController.handleListWithParent(req, res));
+
 
 export { router };

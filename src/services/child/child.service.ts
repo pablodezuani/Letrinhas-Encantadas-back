@@ -35,4 +35,35 @@ export class ChildService {
 
     return child;
   }
+
+  async findAllWithParent() {
+    return prismaClient.child.findMany({
+      include: {
+        parent: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+          },
+        },
+      },
+    });
+  }
+
+  async findByParent(parentId: string) {
+    return prismaClient.child.findMany({
+      where: {
+        parentId,
+      },
+      include: {
+        parent: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+          },
+        },
+      },
+    });
+  }
 }

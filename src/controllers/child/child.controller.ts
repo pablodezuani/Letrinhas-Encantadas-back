@@ -23,4 +23,13 @@ export class ChildController {
       return res.status(500).json({ error: error.message || 'Unexpected error' });
     }
   }
+
+  async handleListWithParent(req: Request, res: Response) {
+    try {
+      const children = await childService.findAllWithParent();
+      return res.status(200).json(children);
+    } catch (error: any) {
+      return res.status(500).json({ error: error.message || 'Unexpected error' });
+    }
+  }
 }
