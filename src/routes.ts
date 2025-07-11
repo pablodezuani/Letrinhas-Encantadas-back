@@ -17,7 +17,8 @@ router.get('/me', isAuthenticated, new DetailuserController().handle);
 
 // Rotas de crianças
 router.post('/children', isAuthenticated, childController.handleCreate);
-router.get('/children/with-parent', (req, res) => childController.handleListWithParent(req, res));
+router.get('/children/with-parent', (req, res) => childController.handleListAllWithParent(req, res));
+router.get('/my-children', (req, res) => childController.handleListByParent(req, res));
 
 
 export { router };

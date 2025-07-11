@@ -29,10 +29,7 @@ interface CreateChildInput {
 
 export class ChildService {
   async create(data: CreateChildInput) {
-    const child = await prismaClient.child.create({
-      data,
-    });
-
+    const child = await prismaClient.child.create({ data });
     return child;
   }
 
@@ -40,11 +37,7 @@ export class ChildService {
     return prismaClient.child.findMany({
       include: {
         parent: {
-          select: {
-            id: true,
-            name: true,
-            email: true,
-          },
+          select: { id: true, name: true, email: true },
         },
       },
     });
@@ -52,16 +45,10 @@ export class ChildService {
 
   async findByParent(parentId: string) {
     return prismaClient.child.findMany({
-      where: {
-        parentId,
-      },
+      where: { parentId },
       include: {
         parent: {
-          select: {
-            id: true,
-            name: true,
-            email: true,
-          },
+          select: { id: true, name: true, email: true },
         },
       },
     });
