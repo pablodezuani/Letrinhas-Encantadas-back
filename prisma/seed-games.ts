@@ -14,8 +14,7 @@ async function main() {
     },
   });
 
-  // ─── VOWELS GAME ─────────────────────────────────────────────────────────────
-  // Cada vogal é um registro com a questão completa no campo `data`
+  
   const vowelsData = [
     {
       text: 'A',
