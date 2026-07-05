@@ -108,7 +108,7 @@ async function main() {
     },
   ];
 
-  // ─── WORD FORMATION GAME ─────────────────────────────────────────────────────
+  
   const wordFormationData = [
     { text: 'ABACAXI', emoji: '🍍', imageUrl: 'abacaxi', difficulty: 'hard' },
     { text: 'ELEFANTE', emoji: '🐘', imageUrl: 'elefante', difficulty: 'hard' },
