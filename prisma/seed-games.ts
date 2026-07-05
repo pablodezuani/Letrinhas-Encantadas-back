@@ -5,7 +5,7 @@ const prisma = new PrismaClient();
 async function main() {
   console.log('🌱 Populando dados dos jogos...\n');
 
-  // Remove dados antigos dos jogos para evitar duplicatas
+
   await prisma.word.deleteMany({
     where: {
       gameTypes: {
