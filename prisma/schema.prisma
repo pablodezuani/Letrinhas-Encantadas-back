@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -13,60 +7,131 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum UserRole {
+  PARENT
+  EDUCATOR
+  ADMIN
+}
 
 model User {
-  id        String   @id @default(uuid())
-  name      String
-  email     String
-  Password  String
-  created_at DateTime? @default(now())
-  updated_at DateTime? @default(now())
-  children  Child[]
+  id         String     @id @default(uuid())
+  name       String
+  email      String     @unique
+  Password   String
+  role       UserRole   @default(PARENT)
+  created_at DateTime?  @default(now())
+  updated_at DateTime?  @updatedAt
+
+  children        Child[]
+  resetTokens     PasswordResetToken[]
+
   @@map("users")
 }
 
-model Child {
-  id             String   @id @default(uuid())
-  
-  // Informações Básicas
-  name           String
-  nickname       String?
-  age            Int?
-  gender         String?
-  photo          String?   // URL ou caminho da foto
-  hasAutism      String?   // "yes" ou "no"
-  autismLevel    String?   // "1", "2", "3"
-  
-  // Categoria Pessoal
-  aboutMe        String?
-  specialInterests String[] @default([])
-  routine        String?
-  communication  String?
-  
-  // Categoria Comportamento
-  likes          String[] @default([])
-  dislikes       String[] @default([])
-  skills         String[] @default([])
-  sensoryNeeds   String?
-  
-  // Categoria Ajuda
-  howToHelp         String?
-  whenFrustrated    String?
-  whenNeedsAttention String?
-  difficulties      String[] @default([])
-  
-  // Categoria Saúde
-  medicalInfo    String?
-  autismInfo     String?
-  medications    String[] @default([])
-  allergies      String[] @default([])
-  
-  // 🔗 Relação com User
-  parentId       String
-  parent         User     @relation(fields: [parentId], references: [id], onDelete: Cascade)
+model PasswordResetToken {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  token     String   @unique
+  expiresAt DateTime
+  used      Boolean  @default(false)
+  createdAt DateTime @default(now())
 
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
+  @@map("password_reset_tokens")
 }
 
+model Child {
+  id       String  @id @default(uuid())
 
+  name     String
+  nickname String?
+  age      Int?
+  gender   String?
+  photo    String?
+
+  hasAutism   String?
+  autismLevel String?
+
+  aboutMe          String?
+  specialInterests String[] @default([])
+  routine          String?
+  communication    String?
+
+  likes        String[] @default([])
+  dislikes     String[] @default([])
+  skills       String[] @default([])
+  sensoryNeeds String?
+
+  howToHelp          String?
+  whenFrustrated     String?
+  whenNeedsAttention String?
+  difficulties       String[] @default([])
+
+  medicalInfo String?
+  autismInfo  String?
+  medications String[] @default([])
+  allergies   String[] @default([])
+
+  color       String?  @default("#7C3AED")
+  lightColor  String?  @default("#EDE9FE")
+  emoji       String?  @default("⭐")
+
+  nextAppointment   String?
+  therapies         Json?    @default("[]")
+  emergencyContacts Json?    @default("[]")
+
+  parentId String
+  parent   User   @relation(fields: [parentId], references: [id], onDelete: Cascade)
+
+  gameSessions GameSession[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("children")
+}
+
+model Word {
+  id         String   @id @default(uuid())
+  text       String
+  category   String
+  difficulty String   @default("easy")
+  emoji      String?
+  sound      String?
+  data       Json?
+  imageUrl   String?
+  audioUrl   String?
+  gameTypes  String[] @default([])
+  active     Boolean  @default(true)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@map("words")
+}
+
+model GameSession {
+  id        String            @id @default(uuid())
+  childId   String
+  child     Child             @relation(fields: [childId], references: [id], onDelete: Cascade)
+  gameType  String
+  score     Int               @default(0)
+  maxScore  Int               @default(0)
+  timeSpent Int               @default(0)
+  completed Boolean           @default(false)
+  items     GameSessionItem[]
+  playedAt  DateTime          @default(now())
+
+  @@map("game_sessions")
+}
+
+model GameSessionItem {
+  id        String      @id @default(uuid())
+  sessionId String
+  session   GameSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  content   String
+  correct   Boolean
+  attempts  Int         @default(1)
+  timeSpent Int         @default(0)
+
+  @@map("game_session_items")
+}

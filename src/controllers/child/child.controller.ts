@@ -9,14 +9,39 @@ export class ChildController {
       const parentId = req.user_id;
       const data = req.body;
 
-      if (!data.name) {
-        return res.status(400).json({ error: 'Name is required' });
-      }
+      if (!data.name) return res.status(400).json({ error: 'Name is required' });
 
       const child = await childService.create({ ...data, parentId });
       return res.status(201).json(child);
     } catch (error: any) {
       return res.status(500).json({ error: error.message || 'Unexpected error' });
+    }
+  }
+
+  async handleUpdate(req: Request, res: Response) {
+    try {
+      const parentId = req.user_id;
+      const { id } = req.params;
+      const data = req.body;
+
+      const child = await childService.update(id, parentId, data);
+      return res.status(200).json(child);
+    } catch (error: any) {
+      const status = error.message.includes('not found') ? 404 : 500;
+      return res.status(status).json({ error: error.message || 'Unexpected error' });
+    }
+  }
+
+  async handleDelete(req: Request, res: Response) {
+    try {
+      const parentId = req.user_id;
+      const { id } = req.params;
+
+      const result = await childService.delete(id, parentId);
+      return res.status(200).json(result);
+    } catch (error: any) {
+      const status = error.message.includes('not found') ? 404 : 500;
+      return res.status(status).json({ error: error.message || 'Unexpected error' });
     }
   }
 
@@ -32,9 +57,7 @@ export class ChildController {
   async handleListByParent(req: Request, res: Response) {
     try {
       const parentId = req.user_id;
-      if (!parentId) {
-        return res.status(401).json({ error: 'Unauthorized' });
-      }
+      if (!parentId) return res.status(401).json({ error: 'Unauthorized' });
 
       const children = await childService.findByParent(parentId);
       return res.status(200).json(children);

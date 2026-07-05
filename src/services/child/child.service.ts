@@ -24,8 +24,16 @@ interface CreateChildInput {
   autismInfo?: string;
   medications?: string[];
   allergies?: string[];
+  color?: string;
+  lightColor?: string;
+  emoji?: string;
+  nextAppointment?: string;
+  therapies?: any;
+  emergencyContacts?: any;
   parentId: string;
 }
+
+type UpdateChildInput = Partial<Omit<CreateChildInput, 'parentId'>>;
 
 export class ChildService {
   async create(data: CreateChildInput) {
@@ -33,12 +41,25 @@ export class ChildService {
     return child;
   }
 
+  async update(id: string, parentId: string, data: UpdateChildInput) {
+    const child = await prismaClient.child.findFirst({ where: { id, parentId } });
+    if (!child) throw new Error('Child not found or access denied');
+
+    return prismaClient.child.update({ where: { id }, data });
+  }
+
+  async delete(id: string, parentId: string) {
+    const child = await prismaClient.child.findFirst({ where: { id, parentId } });
+    if (!child) throw new Error('Child not found or access denied');
+
+    await prismaClient.child.delete({ where: { id } });
+    return { message: 'Child deleted' };
+  }
+
   async findAllWithParent() {
     return prismaClient.child.findMany({
       include: {
-        parent: {
-          select: { id: true, name: true, email: true },
-        },
+        parent: { select: { id: true, name: true, email: true } },
       },
     });
   }
@@ -47,10 +68,13 @@ export class ChildService {
     return prismaClient.child.findMany({
       where: { parentId },
       include: {
-        parent: {
-          select: { id: true, name: true, email: true },
+        parent: { select: { id: true, name: true, email: true } },
+        gameSessions: {
+          orderBy: { playedAt: 'desc' },
+          take: 5,
         },
       },
+      orderBy: { createdAt: 'asc' },
     });
   }
 }
