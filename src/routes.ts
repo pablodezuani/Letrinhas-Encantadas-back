@@ -84,6 +84,8 @@ router.delete('/admin/words/:id', isAuthenticated, hasRole('ADMIN'), wordControl
 const educatorController = new EducatorController();
 router.post('/admin/educators', isAuthenticated, hasRole('ADMIN'), educatorController.handleCreate.bind(educatorController));
 router.get('/admin/educators', isAuthenticated, hasRole('ADMIN'), educatorController.handleList.bind(educatorController));
+router.put('/admin/educators/:id', isAuthenticated, hasRole('ADMIN'), educatorController.handleUpdate.bind(educatorController));
+router.patch('/admin/educators/:id/status', isAuthenticated, hasRole('ADMIN'), educatorController.handleUpdateStatus.bind(educatorController));
 router.delete('/admin/educators/:id', isAuthenticated, hasRole('ADMIN'), educatorController.handleDelete.bind(educatorController));
 
 // ─── LEGACY (mantida para compatibilidade com app antigo) ─────────────────────

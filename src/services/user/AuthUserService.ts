@@ -21,6 +21,14 @@ class AuthUserService {
       throw new Error('User/password incorrect');
     }
 
+    if (user.status === 'BLOCKED') {
+      throw new Error('Este acesso foi bloqueado. Fale com um administrador.');
+    }
+
+    if (user.status === 'INACTIVE') {
+      throw new Error('Este cadastro está inativo. Fale com um administrador.');
+    }
+
     const token = sign(
       { name: user.name, email: user.email, role: user.role },
       process.env.JWT_SECRET,

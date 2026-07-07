@@ -13,12 +13,21 @@ enum UserRole {
   ADMIN
 }
 
+enum UserStatus {
+  ACTIVE
+  BLOCKED
+  INACTIVE
+}
+
 model User {
   id         String     @id @default(uuid())
   name       String
   email      String     @unique
   Password   String
   role       UserRole   @default(PARENT)
+  cpf        String?    @unique
+  photo      String?
+  status     UserStatus @default(ACTIVE)
   created_at DateTime?  @default(now())
   updated_at DateTime?  @updatedAt
 
